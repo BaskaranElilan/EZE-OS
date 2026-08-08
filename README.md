@@ -23,6 +23,8 @@
 
 EZE OS balances **maximum privacy & performance** with **essential daily productivity features** needed for academic and office work (Microsoft Store, printing, accessibility, and .NET runtime support remain intact).
 
+📖 **Complete Specification:** For full technical details, registry tweaks, debloating tables, and architecture breakdown, read the **[Technical Specification & Feature Reference](DOCUMENTATION.md)**.
+
 ---
 
 ## ✨ Features
