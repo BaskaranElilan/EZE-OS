@@ -1,0 +1,39 @@
+---
+title: Packages
+description: Removes system (WinSxS) packages
+privilege: TrustedInstaller
+actions:
+
+  # NOTE: System component removal via PowerShell appx removal
+  - !writeStatus: {status: "Removing system packages"}
+  - !powerShell:
+    command: 'Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like "*Xbox*" -or $_.PackageName -like "*Bing*" -or $_.PackageName -like "*ZuneMusic*" -or $_.PackageName -like "*ZuneVideo*" -or $_.PackageName -like "*MixedReality*" -or $_.PackageName -like "*People*" -or $_.PackageName -like "*SkypeApp*" -or $_.PackageName -like "*Alarms*" -or $_.PackageName -like "*Maps*" } | ForEach-Object { Remove-AppxProvisionedPackage -Online -PackageName $_.PackageName -ErrorAction SilentlyContinue }'
+    weight: 100
+    ignoreErrors: true
+
+  # === Disable Windows Defender
+  - !writeStatus: {status: 'Disabling Windows Defender', option: 'disable-defender'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender', value: 'DisableAntiSpyware', type: REG_DWORD, data: '1', option: 'disable-defender'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection', value: 'DisableRealtimeMonitoring', type: REG_DWORD, data: '1', option: 'disable-defender'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection', value: 'DisableBehaviorMonitoring', type: REG_DWORD, data: '1', option: 'disable-defender'}
+  - !service: {name: 'WinDefend', operation: change, startup: 4, option: 'disable-defender'}
+  - !service: {name: 'SecurityHealthService', operation: change, startup: 4, option: 'disable-defender'}
+
+  # === Enable Windows Defender (keep default)
+  - !writeStatus: {status: 'Enabling Windows Defender', option: 'enable-defender'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender', value: 'DisableAntiSpyware', type: REG_DWORD, data: '0', option: 'enable-defender'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection', value: 'DisableRealtimeMonitoring', type: REG_DWORD, data: '0', option: 'enable-defender'}
+
+  # === Remove AI components (Copilot, Recall) — via PowerShell appx removal
+  - !writeStatus: {status: "Removing AI components", option: 'remove-winsxs-ai'}
+  - !powerShell:
+    command: 'Get-AppxPackage -AllUsers "*Copilot*" | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue; Get-AppxPackage -AllUsers "*Cortana*" | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue'
+    option: 'remove-winsxs-ai'
+    ignoreErrors: true
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot', value: 'TurnOffWindowsCopilot', type: REG_DWORD, data: '1', option: 'remove-winsxs-ai'}
+
+  # === Remove OneDrive
+  - !writeStatus: {status: "Removing OneDrive", option: "remove-onedrive"}
+  - !cmd: {command: '%SystemRoot%\SysWOW64\OneDriveSetup.exe /uninstall', option: "remove-onedrive", ignoreErrors: true}
+  - !cmd: {command: '%SystemRoot%\System32\OneDriveSetup.exe /uninstall', option: "remove-onedrive", ignoreErrors: true}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\OneDrive', value: 'DisableFileSyncNGSC', type: REG_DWORD, data: '1', option: "remove-onedrive"}

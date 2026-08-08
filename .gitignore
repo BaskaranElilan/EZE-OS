@@ -1,0 +1,19 @@
+# Exclude reference folders and local workspace notes
+AME 10 Beta/
+AtlasPlaybook_v0.5.0-hotfix/
+FSOS-XR9/
+Privacy+/
+Revi-PB-26.04/
+
+# Local logs & temporary build outputs
+Log.yml
+Output.txt
+Wall.jpg
+GUID.txt
+AME_Playbook_Comparison.md
+AME_Playbook_File_Structures.md
+EZE_OS_Playbook_Guide.md
+
+*.log
+.vs/
+.idea/

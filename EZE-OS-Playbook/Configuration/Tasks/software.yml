@@ -1,0 +1,126 @@
+﻿---
+title: Software
+description: Installs EZE OS preferred software for students and office users
+privilege: TrustedInstaller
+actions:
+
+  # =============================================
+  # BROWSERS
+  # =============================================
+
+  # Brave Browser
+  - !status: {status: 'Installing Brave', option: "browser-brave"}
+  - !download: 
+    option: "browser-brave"
+    url: 'https://github.com/brave/brave-browser/releases/latest/download/BraveBrowserStandaloneSetup.exe'
+    destination: "BraveBrowserStandaloneSetup.exe"
+    cpuArch: X64
+    package: 'brave'
+  - !run:
+    exeDir: true
+    exe: "BraveBrowserStandaloneSetup.exe"
+    args: "/silent /install"
+    cpuArch: X64
+    weight: 150
+    option: "browser-brave"
+
+  - !download: 
+    option: "browser-brave"
+    url: 'https://github.com/brave/brave-browser/releases/latest/download/BraveBrowserStandaloneSetup.exe'
+    destination: "BraveBrowserStandaloneSetupArm64.exe"
+    cpuArch: Arm64
+    package: 'brave'
+  - !run:
+    exeDir: true
+    exe: "BraveBrowserStandaloneSetupArm64.exe"
+    args: "/silent /install"
+    cpuArch: Arm64
+    weight: 150
+    option: "browser-brave"
+
+  # Firefox
+  - !status: {status: 'Installing Firefox', option: "browser-firefox"}
+  - !software:
+    name: "Firefox"
+    source: chocolatey
+    option: "browser-firefox"
+    package: 'firefox'
+    weight: 150
+
+  # LibreWolf
+  - !status: {status: 'Installing LibreWolf', option: "browser-librewolf"}
+  - !software:
+    name: "LibreWolf"
+    source: chocolatey
+    option: "browser-librewolf"
+    package: 'librewolf'
+    weight: 150
+
+  # =============================================
+  # OFFICE SUITES
+  # =============================================
+
+  # LibreOffice
+  - !status: {status: 'Installing LibreOffice', option: "office-libreoffice"}
+  - !software:
+    name: "LibreOffice"
+    source: chocolatey
+    option: "office-libreoffice"
+    package: 'libreoffice-fresh'
+    weight: 300
+
+  # OnlyOffice
+  - !status: {status: 'Installing OnlyOffice', option: "office-onlyoffice"}
+  - !software:
+    name: "OnlyOffice Desktop"
+    source: chocolatey
+    option: "office-onlyoffice"
+    package: 'onlyoffice'
+    weight: 300
+
+  # =============================================
+  # EMAIL CLIENT
+  # =============================================
+
+  # Thunderbird
+  - !status: {status: 'Installing Thunderbird', option: "email-thunderbird"}
+  - !software:
+    name: "Thunderbird"
+    source: chocolatey
+    option: "email-thunderbird"
+    package: 'thunderbird'
+    weight: 200
+
+  # =============================================
+  # MEDIA PLAYER
+  # =============================================
+
+  # VLC
+  - !status: {status: 'Installing VLC', option: "media-vlc"}
+  - !software:
+    name: "VLC Media Player"
+    source: chocolatey
+    option: "media-vlc"
+    package: 'vlc'
+    weight: 150
+
+  # =============================================
+  # TOOLS (always installed)
+  # =============================================
+
+  # 7-Zip
+  - !status: {status: 'Installing 7-Zip'}
+  - !software:
+    name: "7-Zip"
+    source: chocolatey
+    package: '7zip'
+    weight: 80
+
+  # Notepad++
+  - !status: {status: 'Installing Notepad++', option: "tools-notepadpp"}
+  - !software:
+    name: "Notepad++"
+    source: chocolatey
+    option: "tools-notepadpp"
+    package: 'notepadplusplus'
+    weight: 80

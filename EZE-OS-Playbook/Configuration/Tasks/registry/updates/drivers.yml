@@ -1,0 +1,9 @@
+---
+title: Configure Updates -> Drivers
+description: Configure Windows Update settings for device drivers
+privilege: TrustedInstaller
+actions:
+
+ # Disable Windows Update driver search — registry equivalent of: revitool tweaks performance wu-drivers disable
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'ExcludeWUDriversInQualityUpdate', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching', value: 'SearchOrderConfig', type: REG_DWORD, data: '0'}

@@ -1,0 +1,1 @@
+Write-Host 'EZE OS: Skipping MS Store app updater (no external tool required).'

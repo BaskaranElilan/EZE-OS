@@ -1,0 +1,48 @@
+﻿---
+title: Initialization
+description: Copies EZE OS folders/files and configures initial settings
+privilege: TrustedInstaller
+actions:
+  
+  - !writeStatus: {status: "Initializing EZE OS"}
+
+  # Prevent annoying notifications during deployment
+  - !registryValue:
+    path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance'
+    value: 'Enabled'
+    type: REG_DWORD
+    data: '0'
+
+  - !cmd:
+    exeDir: true
+    command: 'robocopy "Licenses" "%SystemDrive%\Licenses" /E /PURGE /IM /IT /NP'
+    ignoreErrors: true
+    weight: 30
+    
+  - !cmd:
+    exeDir: true
+    command: 'copy /y "hosts" "%WINDIR%\System32\drivers\etc\hosts"'
+    weight: 20
+
+  # Necessary to clean DNS Cache after modifying hosts
+  - !cmd:
+    command: 'ipconfig /flushdns'
+
+  # Install VCRedist (required by many apps)
+  - !writeStatus: {status: "Installing Visual C++ Runtime"}
+  - !download: 
+    url: 'https://aka.ms/vs/17/release/vc_redist.x64.exe'
+    destination: "vc_redist.x64.exe"
+    overwrite: true
+  - !run:
+    exeDir: true
+    exe: "vc_redist.x64.exe"
+    args: '/quiet /norestart'
+    weight: 50
+
+  - !writeStatus: {status: "Optimizing PowerShell"}
+  - !run:
+    exeDir: true
+    exe: "PowerShell"
+    args: '-NoP -ExecutionPolicy Bypass -File ngen.ps1'
+    weight: 100
